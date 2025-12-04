@@ -2,13 +2,14 @@ import express from 'express';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import cors from 'cors';
-import { errorHandler } from './utils/errorHandler.js';
+import { errorHandler, limiter } from './utils/errorHandler.js';
 const app = express();
 
 // middlewares
 app.use(helmet());
 app.use(errorHandler);
 app.use(cors());
+app.use(limiter);
 dotenv.config();
 
 // serve static files

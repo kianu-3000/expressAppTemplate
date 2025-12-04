@@ -16,7 +16,6 @@ const profile = (req, res, next) => {
         }
 
         const data = user.parse(user1);
-        console.log("data: ", data);
         // Sample Data
         res.json(data);
     } catch (err) {
