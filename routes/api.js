@@ -1,5 +1,5 @@
-const express = require('express');
-const apiRouter = express.Router();
+import {Router} from "express";
+const apiRouter = Router();
 
 //Home Page
 apiRouter.get('/animals', (req, res) => {
@@ -13,9 +13,9 @@ apiRouter.get('/animals', (req, res) => {
             "Title": "Shark",
             "Content": "Is a type of fish"
         }
-        
+
     ]);
-    
+
 });
 
-module.exports = apiRouter;
+export { apiRouter }

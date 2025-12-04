@@ -1,14 +1,23 @@
-const express = require('express');
-const dotenv = require('dotenv').config();
+import express from 'express';
+import dotenv from 'dotenv';
+import helmet from 'helmet';
+import cors from 'cors';
+import { errorHandler } from './utils/errorHandler.js';
 const app = express();
+
+// middlewares
+app.use(helmet());
+app.use(errorHandler);
+app.use(cors());
+dotenv.config();
 
 // serve static files
 app.use(express.static('public'));
 
 // Routes
-const userRouter = require('./routes/user');
-const authRouter = require('./routes/auth');
-const apiRouter = require('./routes/api');
+import { userRouter } from './routes/user.js';
+import { authRouter } from './routes/auth.js';
+import { apiRouter } from './routes/api.js';
 app.use('/auth', authRouter);
 app.use('/api', apiRouter);
 app.use('/', userRouter);

@@ -1,1 +1,1 @@
-create a .env file for PORT and other stuff
+create a .env file for PORT and other stuff, this setup is as basic as it gets.

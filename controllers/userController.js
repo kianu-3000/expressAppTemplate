@@ -1,6 +1,28 @@
 
-const profile = (req, res) =>{
-    return res.send('Profile');
-};
+import * as zod from 'zod';
+import { genSalt, hash, compare } from 'bcrypt';
+import jwt from 'jsonwebtoken';
+const profile = (req, res, next) => {
 
-module.exports = {profile};
+    const user = zod.object({
+        name: zod.string(),
+        age: zod.int()
+    });
+
+    try {
+        const user1 = {
+            name: "Kianu",
+            age: 25
+        }
+
+        const data = user.parse(user1);
+        console.log("data: ", data);
+        // Sample Data
+        res.json(data);
+    } catch (err) {
+        next(err);
+    }
+
+}
+
+export { profile };
