@@ -4,10 +4,11 @@ import helmet from 'helmet';
 import cors from 'cors';
 import { errorHandler, limiter } from './utils/errorHandler.js';
 const app = express();
+import { db } from './db.js'
 
 // middlewares
 app.use(helmet());
-app.use(errorHandler);
+
 app.use(cors());
 app.use(limiter);
 app.use(express.json());
@@ -25,8 +26,22 @@ app.use('/auth', authRouter);
 app.use('/api', apiRouter);
 app.use('/', userRouter);
 
+// always put this after all the routes so it can apply
+app.use(errorHandler);
 
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server Running on port ${process.env.PORT}`);
-});
+async function server() {
+    const exists = await db.schema.hasTable('users');
+    if (exists) {
+        console.log('connected to db...');
+        app.listen(process.env.PORT, () => {
+            console.log(`Server Running on port ${process.env.PORT}`);
+        });
+    } else {
+        throw {
+            error: "db connection error!"
+        }
+    }
+}
+
+server();

@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import { profile } from '../controllers/userController.js';
+import { getUsers, createUser } from '../controllers/userController.js';
 import { verifyToken } from '../middlewares/tokenVerification.js';
 const userRouter = Router();
 
-
-//Home Page
-userRouter.get('/home', verifyToken, profile);
+userRouter.get('/get-users', verifyToken, getUsers);
+userRouter.post('/create-user', createUser);
 
 export { userRouter };

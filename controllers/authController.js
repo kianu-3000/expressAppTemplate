@@ -3,35 +3,36 @@ import * as zod from 'zod';
 import { genSalt, hash, compare } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Constants } from '../utils/constants.js';
-const loginAuth = (req, res, next) => {
+import { loginUserValidation } from '../validations/user.js';
+import { db } from '../db.js';
 
-    const inputValidation = zod.object({ // this is to validate user input
-        status: zod.int(),
-        username: zod.string(),
-        password: zod.string()
-    });
+const loginAuth = async (req, res, next) => {
 
     const { username, password } = req.body;
-
     try {
-        const user = {
-            status: Constants.STATUS_CODE.OK,
-            username: username,
-            password: password
-        }
 
-        const data = inputValidation.parse(user);
-        let token = jwt.sign({ username: data.username }, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
-        data["token"] = token;
-        // const decoded = jwt.decode(token, { complete: true });
-        // const test = atob(token.split('.')[1]);
-        // Sample Data
-        const dataResponse = {
-            status: data.status,
-            username: data.username,
-            token: data.token
+        loginUserValidation.parse(req.body);
+        const checkUser = await db("users").where({ username: username });
+        if (checkUser.length <= 0) {
+            res.status(Constants.STATUS_CODE.NOT_FOUND).json({
+                message: "No such user!"
+            })
         }
-        res.status(Constants.STATUS_CODE.OK).json(dataResponse);
+        const match = await compare(password, checkUser[0].password);
+        if (!match) {
+            res.status(Constants.STATUS_CODE.NOT_FOUND).json({
+                message: "Password does not match!"
+            })
+        }
+        const jwtPayload = {
+            id: checkUser[0].id,
+            username: checkUser[0].username
+        }
+        const token = jwt.sign(jwtPayload, process.env.SECRET_KEY, { expiresIn: "1h" });
+        res.status(200).json({
+            message: `Logged in as ${checkUser[0].username}`,
+            token: token
+        });
     } catch (err) {
         next(err);
     }
