@@ -21,9 +21,7 @@ app.use(express.static('public'));
 // Routes
 import { userRouter } from './routes/user.js';
 import { authRouter } from './routes/auth.js';
-import { apiRouter } from './routes/api.js';
 app.use('/auth', authRouter);
-app.use('/api', apiRouter);
 app.use('/', userRouter);
 
 // always put this after all the routes so it can apply

@@ -7,6 +7,10 @@ const Constants = {
         FORBIDDEN: 403,
         UNAUTHORIZED: 401,
         NOT_FOUND: 404
+    },
+    PAGINATION: {
+        PAGE: 1,
+        LIMIT: 10
     }
 }
 

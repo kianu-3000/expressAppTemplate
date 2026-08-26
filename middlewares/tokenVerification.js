@@ -9,7 +9,7 @@ const verifyToken = (req, res, next) => {
             res.status(Constants.STATUS_CODE.UNAUTHORIZED).json({ message: "Missing Token!" });
         }
 
-        const token = header.split(" ")[1]; // this is the token "Bearer <token>"
+        const token = header; // this is the token "Bearer <token>"
         if (!token) {
             res.status(Constants.STATUS_CODE.BAD_REQUEST).json({ message: "Invalid Token!" });
         }
